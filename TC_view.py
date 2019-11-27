@@ -135,7 +135,7 @@ class Editor:
     def highlight(self):
         cursor = self.window.text_bar.textCursor()
         format = QTextCharFormat()
-        format.setBackground(QBrush(QColor("red")))
+        format.setBackground(QBrush(QColor("blue")))
         pattern = "[a-zA-Z]+"
         regex = QRegExp(pattern)
         pos = 0
