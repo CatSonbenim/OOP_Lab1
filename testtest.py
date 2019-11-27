@@ -51,7 +51,7 @@ class App(QWidget):
 
     def keyPressEvent_file(self, e):
         if e.key() == 16777220:
-            print('Open file %s' % self.file_chosen)
+            print('Opened file %s' % self.file_chosen)
 
     def choose_dir(self, signal):
         self.dir_chosen = self.main_w.Dirs.model().filePath(signal)
