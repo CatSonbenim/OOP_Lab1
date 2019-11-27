@@ -93,24 +93,11 @@ class File(ABC):
         pass
 
 
-class Photo(File):
-
-    def open(self):
-        file = Image.open(self.path)
-        file.load()
-        file.show()
-
-
-class Music(File):
+class Other(File):
 
     def open(self):
         os.startfile(self.path)
-
-
-class Video(File):
-
-    def open(self):
-        os.startfile(self.path)
+        return None
 
 
 class Document(File):
@@ -153,8 +140,7 @@ class DocEditor(Editor):
         self.file.close()
 
     def max10(self, text):
-        text = str(text)
-        text = text.replace('\n', '')
+        text = text.replace('\n', ' ')
         text = text.replace('\t', '')
         text = text.replace('.', '')
         text = text.replace('!', '')
@@ -173,7 +159,6 @@ class DocEditor(Editor):
 
     def clear_text(self, text):
         out = ''
-        text = str(text)
         text = text.replace('\t', '')
         while '  ' in text:
             text = text.replace('  ', ' ')
