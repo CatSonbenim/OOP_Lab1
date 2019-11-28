@@ -30,6 +30,8 @@ def folder_recursion(dir, rootdir_obj):
             type = file[file.rfind('.')+1::]
             if type == 'txt':
                 f = Document(dir + '\\' + file, rootdir_obj, 'txt')
+            elif type == 'html':
+                f = HTML(dir + '\\' + file, rootdir_obj, 'html')
             else:
                 f = Other(dir + '\\' + file, rootdir_obj, type)
 

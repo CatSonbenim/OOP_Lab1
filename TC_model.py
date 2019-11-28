@@ -2,9 +2,8 @@ import os
 import time
 import shutil
 from abc import ABC, abstractmethod
-from PIL import Image
 import pickle
-
+from bs4 import BeautifulSoup
 
 class Directory:
 
@@ -106,6 +105,11 @@ class Document(File):
         return DocEditor(self.path)
 
 
+class HTML(File):
+    def open(self):
+        return HTMLEditor(self.path)
+
+
 class Editor(ABC):
 
     def __init__(self, path):
@@ -151,10 +155,14 @@ class DocEditor(Editor):
             text = text.replace('  ', ' ')
         text = text.split(' ')
         text.sort(key=len, reverse=True)
+        text_list = []
+        for string in text:
+            if string != '':
+                text_list.append(string)
         if len(text) > 10:
-            top = text[:10:]
+            top = text_list[:10:]
         else:
-            top = text
+            top = text_list
         return top
 
     def clear_text(self, text):
@@ -164,9 +172,30 @@ class DocEditor(Editor):
             text = text.replace('  ', ' ')
         text = text.split('\n')
         for string in text:
-            if string != ' ':
+            if string != ' ' and string != '':
                 out = out + string + '\n'
         return out
+
+
+class HTMLEditor(Editor):
+
+    def open(self):
+        self.file = open(self.file_path, 'r')
+        self.text = self.file.read()
+
+    def save(self, text):
+        with open(self.file_path, 'w') as file:
+            file.write(text)
+
+    def close(self):
+        self.file.close()
+
+    def simplify(self, text, whitelist=tuple()):
+        soup = BeautifulSoup(text, "html.parser")
+        for tag in soup.findAll(True):
+            for attr in [attr for attr in tag.attrs if attr not in whitelist]:
+                del tag[attr]
+        return soup.prettify().__str__()
 
 
 if __name__ == '__main__':

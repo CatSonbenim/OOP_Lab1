@@ -5,6 +5,7 @@ import pymongo
 from PyQt5.QtWidgets import QApplication, QFileSystemModel, QTreeView, QWidget, QVBoxLayout, QAction
 from PyQt5.QtGui import QTextCharFormat, QBrush, QColor, QTextCursor
 from pickle import loads
+from TC_model import DocEditor, HTMLEditor
 
 
 class App(QWidget):
@@ -18,7 +19,6 @@ class App(QWidget):
         tc = mongo.FileSys
         self.f_sys = tc.file_sys
         self.initUI()
-
 
     def initUI(self):
         self.model = QFileSystemModel()
@@ -98,8 +98,10 @@ class App(QWidget):
 
     def open_editor(self, obj):
         obj.open()
-        self.exe = Editor(obj)
-
+        if isinstance(obj, DocEditor):
+            self.exe = Editor(obj)
+        elif isinstance(obj, HTMLEditor):
+            self.ex = HTMLeditor(obj)
 
 
 class Editor:
@@ -125,7 +127,7 @@ class Editor:
         text = ''
         t = self.editor.max10(self.window.text_bar.toPlainText())
         for i in range(len(t)):
-            text = text + '    ' + str(i+1) + '. ' + t[i]
+            text = text + '    ' + str(i + 1) + '. ' + t[i]
         self.window.label.setText(text)
 
     def save(self):
@@ -146,6 +148,29 @@ class Editor:
             cursor.mergeCharFormat(format)
             pos = index + regex.matchedLength()
             index = regex.indexIn(self.window.text_bar.toPlainText(), pos)
+
+
+class HTMLeditor:
+
+    def __init__(self, editor_obj):
+        self.window = loadUi('HTMLEditor.ui')
+        self.editor = editor_obj
+        self.ui()
+
+    def ui(self):
+        self.window.code.setPlainText(self.editor.text)
+        self.window.save.clicked.connect(self.save)
+        self.window.simpl.clicked.connect(self.simpl)
+        self.window.show()
+
+    def save(self):
+        self.editor.save(self.window.code.toPlainText())
+        self.window.label.setText('Saved!')
+
+    def simpl(self):
+        simplif = self.editor.simplify(self.window.code.toPlainText())
+        self.window.code.setPlainText(simplif)
+        self.window.label.setText('Simplified.')
 
 
 if __name__ == '__main__':
