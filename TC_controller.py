@@ -35,7 +35,7 @@ def folder_recursion(dir, rootdir_obj):
             else:
                 f = Other(dir + '\\' + file, rootdir_obj, type)
 
-            f_sys.insert_one({'path': dir + '\\' + file, 'obj': dumps(f), 'type': 'file'})
+            f_sys.insert_one({'path': dir + '\\' + file, 'obj': dumps(f), 'type': type})
 
         elif os.path.isdir(dir + '\\' + file):
             try:

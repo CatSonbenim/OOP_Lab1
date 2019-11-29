@@ -23,24 +23,25 @@ class Directory:
         self.files = []
 
     def updater(self, file):
-        #придумать тут функцию которая будет динамически обновлять панель отображения
-        pass
+        return file.path
 
     def add_dir(self, dir):
         self.root_dir.append(dir)
 
     def send_update(self):
         for directory in self.root_dir:
-            directory.updater()
+            return directory.updater(self)
 
     def rename(self, new_name):
-        os.rename(self.name, new_name)
+        os.rename(self.path, self.root_dir_path + '\\' + new_name)
         self.name = new_name
+        self.path = self.root_dir_path + '\\' + new_name
+        return self.send_update()
 
     def copy(self, new_folder):
         shutil.copy(self.path, new_folder.path)
         self.add_dir(new_folder)
-        self.send_update()
+        return self.send_update()
 
     def create_file(self, filepath):
         pass
@@ -71,21 +72,20 @@ class File(ABC):
 
     def send_update(self):
         for directory in self.root_dir:
-            directory.updater()
-
-    def delete(self):
-        os.remove(self.path)
-        self.send_update()
+           return directory.updater(self)
 
     def rename(self, new_name):
-        new_name = new_name + self.type
-        os.rename(self.name, new_name)
+        new_name = new_name + '.' + self.type
+        os.rename(self.path, self.root_dir_path + '\\' + new_name)
+        self.path = self.root_dir_path + '\\' + new_name
         self.name = new_name
+        return self.send_update()
+
 
     def copy(self, new_folder):
         shutil.copy(self.path, new_folder.path)
         self.add_dir(new_folder)
-        self.send_update()
+        return self.send_update()
 
     @abstractmethod
     def open(self):

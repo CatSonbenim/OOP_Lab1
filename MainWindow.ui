@@ -343,7 +343,7 @@
   </action>
   <action name="actionRemove">
    <property name="text">
-    <string>Remove</string>
+    <string>Rename</string>
    </property>
   </action>
   <action name="actionDelete">
@@ -363,7 +363,7 @@
   </action>
   <action name="actionRemove_2">
    <property name="text">
-    <string>Remove</string>
+    <string>Rename</string>
    </property>
   </action>
   <action name="actionDelete_2">

@@ -2,7 +2,7 @@ import sys
 from PyQt5.uic import loadUi
 from PyQt5.QtCore import QDir, QRegExp
 import pymongo
-from PyQt5.QtWidgets import QApplication, QFileSystemModel, QTreeView, QWidget, QVBoxLayout, QAction
+from PyQt5.QtWidgets import QApplication, QFileSystemModel, QWidget, QInputDialog, QAction
 from PyQt5.QtGui import QTextCharFormat, QBrush, QColor, QTextCursor
 from pickle import loads
 from TC_model import DocEditor, HTMLEditor
@@ -73,10 +73,10 @@ class App(QWidget):
         print(self.file_chosen)
 
     def create_dir(self):
-        pass
+        print(self.new_dirname())
 
     def create_file(self):
-        pass
+        print(self.new_filename())
 
     def copy_dir(self):
         pass
@@ -85,10 +85,36 @@ class App(QWidget):
         pass
 
     def rename_dir(self):
-        pass
+        newname = self.new_dirname()
+        self.dir_chosen = self.dir_chosen.replace('/', '\\')
+        file = self.f_sys.find_one({'path': self.dir_chosen})['obj']
+        obj = loads(file)
+        signal = obj.rename(newname)
+        print(signal)
+        if signal:
+            self.model = QFileSystemModel()
+            self.model.setRootPath('E:')
+            self.model.setFilter(QDir.AllDirs | QDir.NoDotAndDotDot)
+            self.main_w.Dirs.setModel(self.model)
+            self.main_w.Dirs.setRootIndex(self.model.index(self.model.rootPath()))
+        self.f_sys.update_one({'path': self.dir_chosen},  {"$set": {'path': signal}})
 
     def rename_file(self):
-        pass
+        newname = self.new_filename()
+        self.file_chosen = self.file_chosen.replace('/', '\\')
+        file = self.f_sys.find_one({'path': self.file_chosen})['obj']
+        obj = loads(file)
+        signal = obj.rename(newname)
+        print(signal)
+        if signal:
+            path = self.dir_chosen
+            self.files = QFileSystemModel()
+            self.files.setRootPath(path)
+            self.files.setFilter(QDir.Files)
+            self.main_w.Files.setModel(self.files)
+            self.main_w.Files.setRootIndex(self.files.index(path))
+        self.f_sys.update_one({'path': self.file_chosen},  {"$set": {'path': signal}})
+
 
     def delete_dir(self):
         pass
@@ -102,6 +128,16 @@ class App(QWidget):
             self.exe = Editor(obj)
         elif isinstance(obj, HTMLEditor):
             self.ex = HTMLeditor(obj)
+
+    def new_filename(self):
+        text, ok = QInputDialog.getText(self, 'Filename', 'Enter file name:')
+        if ok:
+            return text
+
+    def new_dirname(self):
+        text, ok = QInputDialog.getText(self, 'Dirname', 'Enter directory name:')
+        if ok:
+            return text
 
 
 class Editor:
