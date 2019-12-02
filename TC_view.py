@@ -2,10 +2,11 @@ import sys
 from PyQt5.uic import loadUi
 from PyQt5.QtCore import QDir, QRegExp
 import pymongo
-from PyQt5.QtWidgets import QApplication, QFileSystemModel, QWidget, QInputDialog, QAction
+from PyQt5.QtWidgets import QApplication, QFileSystemModel, QWidget, QInputDialog, QAction, QMessageBox, QFileDialog
 from PyQt5.QtGui import QTextCharFormat, QBrush, QColor, QTextCursor
-from pickle import loads
+from pickle import loads, dumps
 from TC_model import DocEditor, HTMLEditor
+from TC_controller import *
 
 
 class App(QWidget):
@@ -55,8 +56,6 @@ class App(QWidget):
 
     def keyPressEvent_file(self, e):
         if e.key() == 16777220:
-            self.file_chosen = self.file_chosen.replace('/', '\\')
-            print(self.file_chosen)
             file = self.f_sys.find_one({'path': self.file_chosen})
             file_obj = loads(file['obj'])
             editor = file_obj.open()
@@ -79,14 +78,41 @@ class App(QWidget):
         print(self.new_filename())
 
     def copy_dir(self):
-        pass
+        new_dir = self.dir_copy()
+        file = self.f_sys.find_one({'path': self.dir_chosen})['obj']
+        obj = loads(file)
+        signal = obj.copy(new_dir)
+        print(signal)
+        if signal:
+            self.model = QFileSystemModel()
+            self.model.setRootPath('E:')
+            self.model.setFilter(QDir.AllDirs | QDir.NoDotAndDotDot)
+            self.main_w.Dirs.setModel(self.model)
+            self.main_w.Dirs.setRootIndex(self.model.index(self.model.rootPath()))
+            self.main_w.show()
+        e = Directory(signal, None)
+        self.f_sys.insert_one({'path': signal, 'obj': dumps(e)})
+        folder_recursion(signal, e, self.f_sys)
 
     def copy_file(self):
-        pass
+        new_dir = self.dir_copy()
+        file = self.f_sys.find_one({'path': self.file_chosen})['obj']
+        new_r = self.f_sys.find_one({'path': new_dir})['obj']
+        obj = loads(file)
+        new_root_dir = loads(new_r)
+        signal = obj.copy(new_dir)
+        if signal:
+            self.model = QFileSystemModel()
+            self.model.setRootPath('E:')
+            self.model.setFilter(QDir.AllDirs | QDir.NoDotAndDotDot)
+            self.main_w.Dirs.setModel(self.model)
+            self.main_w.Dirs.setRootIndex(self.model.index(self.model.rootPath()))
+            self.main_w.show()
+        folder_recursion(new_dir, new_root_dir.root_dir, self.f_sys)
+
 
     def rename_dir(self):
         newname = self.new_dirname()
-        self.dir_chosen = self.dir_chosen.replace('/', '\\')
         file = self.f_sys.find_one({'path': self.dir_chosen})['obj']
         obj = loads(file)
         signal = obj.rename(newname)
@@ -97,23 +123,33 @@ class App(QWidget):
             self.model.setFilter(QDir.AllDirs | QDir.NoDotAndDotDot)
             self.main_w.Dirs.setModel(self.model)
             self.main_w.Dirs.setRootIndex(self.model.index(self.model.rootPath()))
-        self.f_sys.update_one({'path': self.dir_chosen},  {"$set": {'path': signal}})
+            self.main_w.show()
+        self.f_sys.insert_one({'path': signal, 'obj': dumps(obj)})
+        folder_recursion(signal, obj.root_dir, self.f_sys)
+
 
     def rename_file(self):
         newname = self.new_filename()
-        self.file_chosen = self.file_chosen.replace('/', '\\')
         file = self.f_sys.find_one({'path': self.file_chosen})['obj']
         obj = loads(file)
-        signal = obj.rename(newname)
-        print(signal)
+        try:
+            signal = obj.rename(newname)
+        except PermissionError:
+            self.msg = QMessageBox()
+            self.msg.setText("Warning!")
+            self.msg .setInformativeText("You can not rename thi file because it's editing")
+            self.msg.setStandardButtons(QMessageBox.Ok)
+            self.msg.buttonClicked.connect(self.msg.close)
+            self.msg.show()
+            return None
         if signal:
-            path = self.dir_chosen
-            self.files = QFileSystemModel()
-            self.files.setRootPath(path)
-            self.files.setFilter(QDir.Files)
-            self.main_w.Files.setModel(self.files)
-            self.main_w.Files.setRootIndex(self.files.index(path))
-        self.f_sys.update_one({'path': self.file_chosen},  {"$set": {'path': signal}})
+            self.model = QFileSystemModel()
+            self.model.setRootPath('E:')
+            self.model.setFilter(QDir.AllDirs | QDir.NoDotAndDotDot)
+            self.main_w.Dirs.setModel(self.model)
+            self.main_w.Dirs.setRootIndex(self.model.index(self.model.rootPath()))
+            self.main_w.show()
+        self.f_sys.insert_one({'path': signal, 'obj': dumps(obj)})
 
 
     def delete_dir(self):
@@ -138,6 +174,13 @@ class App(QWidget):
         text, ok = QInputDialog.getText(self, 'Dirname', 'Enter directory name:')
         if ok:
             return text
+
+    def dir_copy(self):
+        dlg = QFileDialog()
+        dlg.setFileMode(QFileDialog.DirectoryOnly)
+        dlg.ShowDirsOnly = True
+        dlg.setFilter(QDir.AllDirs)
+        return dlg.getExistingDirectory()
 
 
 class Editor:

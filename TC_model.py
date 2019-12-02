@@ -33,15 +33,14 @@ class Directory:
             return directory.updater(self)
 
     def rename(self, new_name):
-        os.rename(self.path, self.root_dir_path + '\\' + new_name)
+        os.rename(self.path, self.root_dir_path + new_name)
         self.name = new_name
-        self.path = self.root_dir_path + '\\' + new_name
+        self.path = self.root_dir_path + new_name
         return self.send_update()
 
     def copy(self, new_folder):
-        shutil.copy(self.path, new_folder.path)
-        self.add_dir(new_folder)
-        return self.send_update()
+        new = shutil.copytree(self.path, new_folder + '/' + self.name)
+        return new
 
     def create_file(self, filepath):
         pass
@@ -76,16 +75,14 @@ class File(ABC):
 
     def rename(self, new_name):
         new_name = new_name + '.' + self.type
-        os.rename(self.path, self.root_dir_path + '\\' + new_name)
-        self.path = self.root_dir_path + '\\' + new_name
+        os.rename(self.path, self.root_dir_path + '/' + new_name)
+        self.path = self.root_dir_path + '/' + new_name
         self.name = new_name
         return self.send_update()
 
-
     def copy(self, new_folder):
-        shutil.copy(self.path, new_folder.path)
-        self.add_dir(new_folder)
-        return self.send_update()
+        new = shutil.copy(self.path, new_folder)
+        return newcgj
 
     @abstractmethod
     def open(self):
