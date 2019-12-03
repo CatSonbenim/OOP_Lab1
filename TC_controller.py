@@ -6,16 +6,16 @@ from pickle import dumps
 
 
 def creating_file_model(f_sys):
-    e = Directory('E:', None)
-    f_sys.insert_one({'path': 'E:', 'obj': dumps(e), 'type': 'dir'})
-    print('Dir created: E:\nobj:', e)
-    folder_recursion('E:', e, f_sys)
+    e = Directory('/home/cat_sonbenim', None)
+    f_sys.insert_one({'path': '/home/cat_sonbenim', 'obj': dumps(e), 'type': 'dir'})
+    print('Dir created: /home/cat_sonbenim\nobj:', e)
+    folder_recursion('/home/cat_sonbenim', e, f_sys)
 
 
 def folder_recursion(dir, rootdir_obj, f_sys):
     files = os.listdir(dir + '/')
     for file in files:
-        if file[0] == '$':
+        if file[0] == '.':
             pass
         elif os.path.isfile(dir + '/' + file):
             type = file[file.rfind('.')+1::]

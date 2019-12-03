@@ -24,7 +24,7 @@ class App(QWidget):
 
     def initUI(self):
         self.model = QFileSystemModel()
-        self.model.setRootPath('E:')
+        self.model.setRootPath('/home/cat_sonbenim')
         self.model.setFilter(QDir.AllDirs | QDir.NoDotAndDotDot)
         self.main_w.Dirs.setModel(self.model)
         self.main_w.Dirs.doubleClicked.connect(self.choose_dir)
@@ -91,7 +91,7 @@ class App(QWidget):
         signal = obj.new_dir(name)
         if signal:
             self.model = QFileSystemModel()
-            self.model.setRootPath('E:')
+            self.model.setRootPath('/home/cat_sonbenim')
             self.model.setFilter(QDir.AllDirs | QDir.NoDotAndDotDot)
             self.main_w.Dirs.setModel(self.model)
             self.main_w.Dirs.setRootIndex(self.model.index(self.model.rootPath()))
@@ -107,7 +107,7 @@ class App(QWidget):
         signal = obj.new_file(new_file)
         if signal:
             self.model = QFileSystemModel()
-            self.model.setRootPath('E:')
+            self.model.setRootPath('/home/cat_sonbenim')
             self.model.setFilter(QDir.AllDirs | QDir.NoDotAndDotDot)
             self.main_w.Dirs.setModel(self.model)
             self.main_w.Dirs.setRootIndex(self.model.index(self.model.rootPath()))
@@ -123,7 +123,7 @@ class App(QWidget):
         print(signal)
         if signal:
             self.model = QFileSystemModel()
-            self.model.setRootPath('E:')
+            self.model.setRootPath('/home/cat_sonbenim')
             self.model.setFilter(QDir.AllDirs | QDir.NoDotAndDotDot)
             self.main_w.Dirs.setModel(self.model)
             self.main_w.Dirs.setRootIndex(self.model.index(self.model.rootPath()))
@@ -141,7 +141,7 @@ class App(QWidget):
         signal = obj.copy(new_dir)
         if signal:
             self.model = QFileSystemModel()
-            self.model.setRootPath('E:')
+            self.model.setRootPath('/home/cat_sonbenim')
             self.model.setFilter(QDir.AllDirs | QDir.NoDotAndDotDot)
             self.main_w.Dirs.setModel(self.model)
             self.main_w.Dirs.setRootIndex(self.model.index(self.model.rootPath()))
@@ -157,7 +157,7 @@ class App(QWidget):
         print(signal)
         if signal:
             self.model = QFileSystemModel()
-            self.model.setRootPath('E:')
+            self.model.setRootPath('/home/cat_sonbenim')
             self.model.setFilter(QDir.AllDirs | QDir.NoDotAndDotDot)
             self.main_w.Dirs.setModel(self.model)
             self.main_w.Dirs.setRootIndex(self.model.index(self.model.rootPath()))
@@ -182,7 +182,7 @@ class App(QWidget):
             return None
         if signal:
             self.model = QFileSystemModel()
-            self.model.setRootPath('E:')
+            self.model.setRootPath('/home/cat_sonbenim')
             self.model.setFilter(QDir.AllDirs | QDir.NoDotAndDotDot)
             self.main_w.Dirs.setModel(self.model)
             self.main_w.Dirs.setRootIndex(self.model.index(self.model.rootPath()))
@@ -198,7 +198,7 @@ class App(QWidget):
         signal = dir_obj.del_dir()
         if signal:
             self.model = QFileSystemModel()
-            self.model.setRootPath('E:')
+            self.model.setRootPath('/home/cat_sonbenim')
             self.model.setFilter(QDir.AllDirs | QDir.NoDotAndDotDot)
             self.main_w.Dirs.setModel(self.model)
             self.main_w.Dirs.setRootIndex(self.model.index(self.model.rootPath()))
@@ -215,7 +215,7 @@ class App(QWidget):
         signal = dir_obj.del_file(obj.path)
         if signal:
             self.model = QFileSystemModel()
-            self.model.setRootPath('E:')
+            self.model.setRootPath('/home/cat_sonbenim')
             self.model.setFilter(QDir.AllDirs | QDir.NoDotAndDotDot)
             self.main_w.Dirs.setModel(self.model)
             self.main_w.Dirs.setRootIndex(self.model.index(self.model.rootPath()))
