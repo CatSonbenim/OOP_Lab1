@@ -42,11 +42,25 @@ class Directory:
         new = shutil.copytree(self.path, new_folder + '/' + self.name)
         return new
 
-    def create_file(self, filepath):
-        pass
+    def new_dir(self, name):
+        os.mkdir(self.path + '/' + name)
+        return self.path + '/' + name
 
-    def create_dir(self, filepath):
-        pass
+    def new_file(self, name):
+        open(self.path + '/' + name, 'tw', encoding='utf-8').close()
+        return self.path + '/' + name
+
+    def del_file(self, file):
+        os.remove(file)
+        return self.path
+
+    def del_dir(self):
+        for file in os.listdir(self.path):
+            os.remove(self.path + '/' + file)
+        os.rmdir(self.path)
+        return self.root_dir_path
+
+
 
 
 class File(ABC):
@@ -82,7 +96,7 @@ class File(ABC):
 
     def copy(self, new_folder):
         new = shutil.copy(self.path, new_folder)
-        return newcgj
+        return new
 
     @abstractmethod
     def open(self):

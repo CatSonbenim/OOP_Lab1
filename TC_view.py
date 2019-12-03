@@ -2,6 +2,7 @@ import sys
 from PyQt5.uic import loadUi
 from PyQt5.QtCore import QDir, QRegExp
 import pymongo
+import os
 from PyQt5.QtWidgets import QApplication, QFileSystemModel, QWidget, QInputDialog, QAction, QMessageBox, QFileDialog
 from PyQt5.QtGui import QTextCharFormat, QBrush, QColor, QTextCursor
 from pickle import loads, dumps
@@ -42,6 +43,14 @@ class App(QWidget):
         self.main_w.rename_file.clicked.connect(self.rename_file)
         self.main_w.delete_dir.clicked.connect(self.delete_dir)
         self.main_w.delete_file.clicked.connect(self.delete_file)
+        self.main_w.actionCreate.triggered.connect(self.create_dir)
+        self.main_w.actionCopy.triggered.connect(self.copy_dir)
+        self.main_w.actionRemove.triggered.connect(self.rename_dir)
+        self.main_w.actionDelete.triggered.connect(self.delete_dir)
+        self.main_w.actionCreate_2.triggered.connect(self.create_file)
+        self.main_w.actionCopy_2.triggered.connect(self.copy_file)
+        self.main_w.actionRemove_2.triggered.connect(self.rename_file)
+        self.main_w.actionDelete_2.triggered.connect(self.delete_file)
         self.main_w.show()
 
     def keyPressEvent_dir(self, e):
@@ -72,10 +81,35 @@ class App(QWidget):
         print(self.file_chosen)
 
     def create_dir(self):
-        print(self.new_dirname())
+        name = self.new_dirname()
+        file = self.f_sys.find_one({'path': self.dir_chosen})['obj']
+        obj = loads(file)
+        signal = obj.new_dir(name)
+        if signal:
+            self.model = QFileSystemModel()
+            self.model.setRootPath('E:')
+            self.model.setFilter(QDir.AllDirs | QDir.NoDotAndDotDot)
+            self.main_w.Dirs.setModel(self.model)
+            self.main_w.Dirs.setRootIndex(self.model.index(self.model.rootPath()))
+            self.main_w.show()
+        folder_recursion(self.dir_chosen, file, self.f_sys)
 
     def create_file(self):
-        print(self.new_filename())
+        name = self.new_filename()
+        type = self.new_type()
+        new_file = name + '.' + type
+        file = self.f_sys.find_one({'path': self.dir_chosen})['obj']
+        obj = loads(file)
+        signal = obj.new_file(new_file)
+        if signal:
+            self.model = QFileSystemModel()
+            self.model.setRootPath('E:')
+            self.model.setFilter(QDir.AllDirs | QDir.NoDotAndDotDot)
+            self.main_w.Dirs.setModel(self.model)
+            self.main_w.Dirs.setRootIndex(self.model.index(self.model.rootPath()))
+            self.main_w.show()
+        folder_recursion(self.dir_chosen, file, self.f_sys)
+
 
     def copy_dir(self):
         new_dir = self.dir_copy()
@@ -153,10 +187,37 @@ class App(QWidget):
 
 
     def delete_dir(self):
-        pass
+        dir = self.f_sys.find_one({'path': self.dir_chosen})['obj']
+        dir_obj = loads(dir)
+        for file in os.listdir(self.dir_chosen):
+            self.f_sys.delete_one({'path': self.dir_chosen + '/' + file})
+        signal = dir_obj.del_dir()
+        if signal:
+            self.model = QFileSystemModel()
+            self.model.setRootPath('E:')
+            self.model.setFilter(QDir.AllDirs | QDir.NoDotAndDotDot)
+            self.main_w.Dirs.setModel(self.model)
+            self.main_w.Dirs.setRootIndex(self.model.index(self.model.rootPath()))
+            self.main_w.show()
+            self.dir_chosen = ''
+        self.f_sys.delete_one({'path': self.dir_chosen})
+
 
     def delete_file(self):
-        pass
+        dir = self.f_sys.find_one({'path': self.dir_chosen})['obj']
+        dir_obj = loads(dir)
+        file = self.f_sys.find_one({'path': self.file_chosen})['obj']
+        obj = loads(file)
+        signal = dir_obj.del_file(obj.path)
+        if signal:
+            self.model = QFileSystemModel()
+            self.model.setRootPath('E:')
+            self.model.setFilter(QDir.AllDirs | QDir.NoDotAndDotDot)
+            self.main_w.Dirs.setModel(self.model)
+            self.main_w.Dirs.setRootIndex(self.model.index(self.model.rootPath()))
+            self.main_w.show()
+        self.f_sys.delete_one({'path': self.file_chosen})
+
 
     def open_editor(self, obj):
         obj.open()
@@ -174,6 +235,19 @@ class App(QWidget):
         text, ok = QInputDialog.getText(self, 'Dirname', 'Enter directory name:')
         if ok:
             return text
+
+    def new_type(self):
+        text, ok = QInputDialog.getText(self, 'Object type', 'What type object do you want to crate:')
+        if ok and text in ['txt', 'doc', 'docx', 'jpg', 'mp3', 'mp4']:
+            return text
+        else:
+            self.msg = QMessageBox()
+            self.msg.setText("Warning!")
+            self.msg.setInformativeText("You can not  create object of this type.")
+            self.msg.setStandardButtons(QMessageBox.Ok)
+            self.msg.buttonClicked.connect(self.msg.close)
+            self.msg.show()
+            return None
 
     def dir_copy(self):
         dlg = QFileDialog()

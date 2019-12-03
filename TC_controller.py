@@ -1,4 +1,3 @@
-import win32api
 import os
 import pymongo
 from TC_model import *
