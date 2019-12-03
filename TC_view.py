@@ -4,7 +4,7 @@ from PyQt5.QtCore import QDir, QRegExp
 import pymongo
 import os
 from PyQt5.QtWidgets import QApplication, QFileSystemModel, QWidget, QInputDialog, QAction, QMessageBox, QFileDialog
-from PyQt5.QtGui import QTextCharFormat, QBrush, QColor, QTextCursor
+from PyQt5.QtGui import QTextCharFormat, QBrush, QColor, QTextCursor, QStandardItemModel, QStandardItem
 from pickle import loads, dumps
 from TC_model import DocEditor, HTMLEditor
 from TC_controller import *
@@ -51,7 +51,11 @@ class App(QWidget):
         self.main_w.actionCopy_2.triggered.connect(self.copy_file)
         self.main_w.actionRemove_2.triggered.connect(self.rename_file)
         self.main_w.actionDelete_2.triggered.connect(self.delete_file)
+        self.main_w.actionFind_files.triggered.connect(self.finding)
         self.main_w.show()
+
+    def finding(self):
+        self.w = Finding()
 
     def keyPressEvent_dir(self, e):
         if e.key() == 16777220:
@@ -324,6 +328,42 @@ class HTMLeditor:
         simplif = self.editor.simplify(self.window.code.toPlainText())
         self.window.code.setPlainText(simplif)
         self.window.label.setText('Simplified.')
+
+
+class Finding:
+
+    def __init__(self):
+        self.window = loadUi('Find.ui')
+        mongo = pymongo.MongoClient()
+        tc = mongo.FileSys
+        self.f_sys = tc.file_sys
+        self.ui()
+
+    def ui(self):
+        self.window.find.clicked.connect(self.find)
+        self.window.show()
+
+    def find(self):
+        list = []
+        model = QStandardItemModel()
+        type = self.window.field.currentIndex()
+        filter = self.window.lineEdit.text()
+        print(type, filter)
+        if type == 0:
+            filter = '/' + filter + '/'
+            res = self.f_sys.find({'path': {"$regex": filter}})
+            for i in res:
+                if os.path.exists(i['path']):
+                    list.append(i['path'])
+        elif type == 1:
+            res = self.f_sys.find({'type': filter})
+            for i in res:
+                if os.path.exists(i['path']):
+                    list.append(i['path'])
+        list = set(list)
+        for i in list:
+            model.appendRow(QStandardItem(i))
+        self.window.listView.setModel(model)
 
 
 if __name__ == '__main__':

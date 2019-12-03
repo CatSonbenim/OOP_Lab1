@@ -7,7 +7,7 @@ from pickle import dumps
 
 def creating_file_model(f_sys):
     e = Directory('E:', None)
-    f_sys.insert_one({'path': 'E:', 'obj': dumps(e)})
+    f_sys.insert_one({'path': 'E:', 'obj': dumps(e), 'type': 'dir'})
     print('Dir created: E:\nobj:', e)
     folder_recursion('E:', e, f_sys)
 

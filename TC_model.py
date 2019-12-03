@@ -61,8 +61,6 @@ class Directory:
         return self.root_dir_path
 
 
-
-
 class File(ABC):
 
     def __init__(self, path, rd, file_type):

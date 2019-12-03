@@ -30,28 +30,22 @@
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
-     <item row="2" column="5">
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeType">
-        <enum>QSizePolicy::Minimum</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>20</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item row="2" column="1" colspan="4">
-      <widget class="QTreeView" name="Dirs">
+     <item row="1" column="1" colspan="4">
+      <widget class="QLabel" name="label">
        <property name="font">
         <font>
          <family>Book Antiqua</family>
+         <pointsize>17</pointsize>
         </font>
+       </property>
+       <property name="text">
+        <string>Directories</string>
+       </property>
+       <property name="textFormat">
+        <enum>Qt::AutoText</enum>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
        </property>
       </widget>
      </item>
@@ -65,19 +59,6 @@
        </property>
        <property name="text">
         <string>Copy</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="3">
-      <widget class="QPushButton" name="rename_dir">
-       <property name="font">
-        <font>
-         <family>Book Antiqua</family>
-         <pointsize>10</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Rename</string>
        </property>
       </widget>
      </item>
@@ -100,47 +81,25 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="0" colspan="11">
-      <widget class="QLabel" name="label_3">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-         <horstretch>0</horstretch>
-         <verstretch>1</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>1000</width>
-         <height>150</height>
-        </size>
-       </property>
+     <item row="2" column="1" colspan="4">
+      <widget class="QTreeView" name="Dirs">
        <property name="font">
         <font>
          <family>Book Antiqua</family>
-         <pointsize>14</pointsize>
         </font>
-       </property>
-       <property name="text">
-        <string>How to use:</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="1" colspan="4">
-      <widget class="QLabel" name="label">
+     <item row="4" column="3">
+      <widget class="QPushButton" name="rename_dir">
        <property name="font">
         <font>
          <family>Book Antiqua</family>
-         <pointsize>17</pointsize>
+         <pointsize>10</pointsize>
         </font>
        </property>
        <property name="text">
-        <string>Directories</string>
-       </property>
-       <property name="textFormat">
-        <enum>Qt::AutoText</enum>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
+        <string>Rename</string>
        </property>
       </widget>
      </item>
@@ -160,6 +119,22 @@
        </property>
       </spacer>
      </item>
+     <item row="2" column="5">
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Minimum</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
      <item row="4" column="4">
       <widget class="QPushButton" name="delete_dir">
        <property name="font">
@@ -170,6 +145,48 @@
        </property>
        <property name="text">
         <string>Delete</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="7">
+      <widget class="QPushButton" name="copy_file">
+       <property name="font">
+        <font>
+         <family>Book Antiqua</family>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Copy</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="10">
+      <spacer name="horizontalSpacer_3">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Minimum</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item row="4" column="8">
+      <widget class="QPushButton" name="rename_file">
+       <property name="font">
+        <font>
+         <family>Book Antiqua</family>
+         <pointsize>10</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Rename</string>
        </property>
       </widget>
      </item>
@@ -199,47 +216,14 @@
        </property>
       </widget>
      </item>
-     <item row="4" column="7">
-      <widget class="QPushButton" name="copy_file">
+     <item row="2" column="6" colspan="4">
+      <widget class="QListView" name="Files">
        <property name="font">
         <font>
          <family>Book Antiqua</family>
-         <pointsize>10</pointsize>
         </font>
        </property>
-       <property name="text">
-        <string>Copy</string>
-       </property>
       </widget>
-     </item>
-     <item row="4" column="8">
-      <widget class="QPushButton" name="rename_file">
-       <property name="font">
-        <font>
-         <family>Book Antiqua</family>
-         <pointsize>10</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Rename</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="10">
-      <spacer name="horizontalSpacer_3">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeType">
-        <enum>QSizePolicy::Minimum</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>20</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
      </item>
      <item row="2" column="0">
       <spacer name="horizontalSpacer_2">
@@ -270,12 +254,28 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="6" colspan="4">
-      <widget class="QListView" name="Files">
+     <item row="0" column="0" colspan="11">
+      <widget class="QLabel" name="label_3">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+         <horstretch>0</horstretch>
+         <verstretch>1</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>1000</width>
+         <height>150</height>
+        </size>
+       </property>
        <property name="font">
         <font>
          <family>Book Antiqua</family>
+         <pointsize>14</pointsize>
         </font>
+       </property>
+       <property name="text">
+        <string>How to use:</string>
        </property>
       </widget>
      </item>
@@ -314,21 +314,16 @@
      <string>Help</string>
     </property>
    </widget>
-   <widget class="QMenu" name="menuAbout">
-    <property name="title">
-     <string>About</string>
-    </property>
-   </widget>
    <widget class="QMenu" name="menuFind">
     <property name="title">
      <string>Find</string>
     </property>
+    <addaction name="actionFind_files"/>
    </widget>
    <addaction name="menuDirectory"/>
    <addaction name="menuFile"/>
    <addaction name="menuFind"/>
    <addaction name="menuHelp"/>
-   <addaction name="menuAbout"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionCreate">
@@ -369,6 +364,11 @@
   <action name="actionDelete_2">
    <property name="text">
     <string>Delete</string>
+   </property>
+  </action>
+  <action name="actionFind_files">
+   <property name="text">
+    <string>Find files</string>
    </property>
   </action>
  </widget>
