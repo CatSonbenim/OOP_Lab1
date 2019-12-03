@@ -48,3 +48,4 @@ def file_system():
 
 if __name__ == '__main__':
     file_system()
+    main()

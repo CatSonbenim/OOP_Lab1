@@ -366,7 +366,7 @@ class Finding:
         self.window.listView.setModel(model)
 
 
-if __name__ == '__main__':
+def main():
     app = QApplication(sys.argv)
     ex = App()
     sys.exit(app.exec_())

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>949</width>
+    <width>948</width>
     <height>843</height>
    </rect>
   </property>
@@ -25,7 +25,7 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>931</width>
+      <width>993</width>
       <height>791</height>
      </rect>
     </property>
@@ -275,7 +275,10 @@
         </font>
        </property>
        <property name="text">
-        <string>How to use:</string>
+        <string>How to use: to select directory or item doble click on it. To open press Enter. Buttons under directories window works ONLY with directories, as well as buttons uder file works ONLY with files.</string>
+       </property>
+       <property name="wordWrap">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -287,7 +290,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>949</width>
+     <width>948</width>
      <height>21</height>
     </rect>
    </property>
@@ -309,11 +312,6 @@
     <addaction name="actionRemove_2"/>
     <addaction name="actionDelete_2"/>
    </widget>
-   <widget class="QMenu" name="menuHelp">
-    <property name="title">
-     <string>Help</string>
-    </property>
-   </widget>
    <widget class="QMenu" name="menuFind">
     <property name="title">
      <string>Find</string>
@@ -323,7 +321,6 @@
    <addaction name="menuDirectory"/>
    <addaction name="menuFile"/>
    <addaction name="menuFind"/>
-   <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionCreate">
